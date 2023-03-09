@@ -8,8 +8,6 @@ const Allrefundhistory = require("../models/Addrefund");
 const Info = require("../models/addinfo");
 const Orderlock = require("../models/OrderlockSchema");
 
-// const { createTransport } = require("nodemailer");
-
 // -----------------------------User Registration-------------------------------//
 router.post("/register", async (req, res) => {
   const { name, email, phone, password, balance } = req.body;
@@ -56,6 +54,23 @@ router.post("/login", async (req, res) => {
     res.status(422).send("Invalid credentials");
   }
 });
+// /////////////////////////Change password/////////////////////////////
+
+router.post("/changepassword", async (req, res) => {
+  const { useremail, newpassword } = req.body;
+  await User.updateOne(
+    {
+      email: useremail,
+    },
+    {
+      $set: {
+        password: newpassword,
+      },
+    }
+  );
+  res.send("hellow");
+});
+
 // //-----------------------------Add Offer Package-----------------------------//
 
 router.post("/addpackage", async (req, res) => {
