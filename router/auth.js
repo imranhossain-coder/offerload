@@ -484,4 +484,11 @@ router.get("/getalluser", async (req, res) => {
   res.status(201).json(Alluserdata);
 });
 
+router.post("/searchuser", async (req, res) => {
+  const { phone } = req.body;
+  let response = await User.find({ phone });
+
+  res.status(201).send(response);
+});
+
 module.exports = router;
