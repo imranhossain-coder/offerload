@@ -125,19 +125,20 @@ router.get("/allrefundhistory", async (req, res) => {
 
 router.get("/getpendingaddbalance", async (req, res) => {
   const Pendinghistory = await Allbalancehistory.find({ status: "pending" });
-  res.status(201).json(Pendinghistory);
+
+  res.status(201).json(Pendinghistory.length);
 });
 // //-----------------------------Get PendingHistoryOrder-----------------------------//
 
 router.get("/getpendingorder", async (req, res) => {
   const Pendinghistory = await Allorderhistory.find({ status: "pending" });
-  res.status(201).json(Pendinghistory);
+  res.status(201).json(Pendinghistory.length);
 });
 // //-----------------------------Get PendingRefundhistory-----------------------------//
 
 router.get("/getpendingrefund", async (req, res) => {
   const Pendinghistory = await Allrefundhistory.find({ status: "pending" });
-  res.status(201).json(Pendinghistory);
+  res.status(201).json(Pendinghistory.length);
 });
 
 // //-----------------------------Get Packages-----------------------------//
