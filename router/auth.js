@@ -7,6 +7,8 @@ const Allorderhistory = require("../models/AddorderSchema");
 const Allrefundhistory = require("../models/Addrefund");
 const Info = require("../models/addinfo");
 const Orderlock = require("../models/OrderlockSchema");
+const { Slider, Notice } = require("../models/Addslider");
+const allchangepassword = require("../models/Changepassword");
 
 // -----------------------------User Registration-------------------------------//
 router.post("/register", async (req, res) => {
@@ -127,6 +129,10 @@ router.get("/getpendingaddbalance", async (req, res) => {
   const Pendinghistory = await Allbalancehistory.find({ status: "pending" });
 
   res.status(201).json(Pendinghistory.length);
+});
+router.get("/getpendingpassrequest", async (req, res) => {
+  const Allchangepass = await allchangepassword.find();
+  res.status(201).json(Allchangepass.length);
 });
 // //-----------------------------Get PendingHistoryOrder-----------------------------//
 
@@ -490,6 +496,60 @@ router.post("/searchuser", async (req, res) => {
   let response = await User.find({ phone });
 
   res.status(201).send(response);
+});
+
+router.post("/addslider", async (req, res) => {
+  const { imgurl, imglink } = req.body;
+  const Addslides = new Slider({ imgurl, imglink });
+  await Addslides.save();
+  res.send("successfull");
+});
+
+router.get("/getsliders", async (req, res) => {
+  const Sliders = await Slider.find();
+  res.status(201).json(Sliders);
+});
+router.post("/deleteslider", async (req, res) => {
+  const { _id } = req.body;
+  await Slider.findByIdAndDelete(_id);
+  res.status(201).send("delete successfully");
+});
+
+router.post("/addnotice", async (req, res) => {
+  const { notice } = req.body;
+
+  await Notice.updateOne(
+    { _id: "640d5f5f7911c8339816b960" },
+    {
+      notice,
+    }
+  );
+
+  res.status(201).send("Order Lock Successfully");
+});
+router.get("/getnotice", async (req, res) => {
+  const Notices = await Notice.findOne();
+  res.status(201).send(Notices);
+});
+router.post("/postchangepass", async (req, res) => {
+  const { useremail, time } = req.body;
+  const findeuser = await User.find({ email: useremail });
+
+  if (findeuser.length !== 0) {
+    const Allpassrequest = new allchangepassword({
+      useremail,
+      time,
+    });
+    await Allpassrequest.save();
+    res.status(201).send("Change Pass successfully");
+  } else {
+    res.status(402).send("user not found");
+  }
+});
+
+router.get("/getchangepass", async (req, res) => {
+  const Allchangepass = await allchangepassword.find();
+  res.status(201).json(Allchangepass);
 });
 
 module.exports = router;
